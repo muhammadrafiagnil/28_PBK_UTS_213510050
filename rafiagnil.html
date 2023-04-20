@@ -1,0 +1,113 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<div id="app">
+    <todo></todo>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+   Vue.component('todo',{
+        template : `
+            <div class="container">
+                <h1 class="text-center">Nila To Do List</h1>
+                <div class="form-group">
+                    <input class="form-control" type="text" v-model="baru"
+                    @keyup.enter="tambah">
+                </div>
+                <table class="table table-bordered">
+                    <tr v-for='(t, index) in tugas'>
+                        <td>
+                            <button class="btn btn-info" 
+                            @click='selesai(index, t.status)'
+                            :value='t.cek'> {{t.status}}
+                            </button>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control"
+                            :disabled='t.dis' :value="t.kegiatan" 
+                            v-model="t.kegiatan"/> 
+                        </td>
+                        <td>
+                            <button class="btn btn-success"
+                            @click='edit(index, t.dis)'>
+                                Edit
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger"
+                            @click='hapus(index)'>Hapus</button>
+                        </td>
+                    </tr>
+                </table>
+                <div class='row'>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-danger"
+                        @click="hapusselesai" >Hapus Selesai</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-danger"
+                        @click="hapussemua">Hapus Semua</button>
+                    </div>
+                </dvi>
+            </div>
+        `,
+        data() {
+           return {
+               baru : '',
+               tugas : [
+                    {kegiatan: 'Sahur dan Solat Subuh', cek : false, status : 'belum selesai',dis : true}
+                ],
+               garis : [],
+               baru : ''
+           }
+       },
+       methods: {
+           tambah(){
+               if(this.baru == ''){
+                   alert('silahkan isi terlebih dahulu')
+               }else{
+                   this.tugas.push({
+                       kegiatan : this.baru,
+                       cek : false,
+                       status : 'belum selesai',
+                       dis : true
+                   })
+               }
+               this.baru = ''
+           },
+           selesai(index, nilai){
+               if(nilai == 'belum selesai'){
+                   this.tugas[index].cek = true,
+                   this.garis[index] = 'V',
+                   this.tugas[index].status = 'selesai'
+               }else{
+                this.tugas[index].cek = false,
+                   this.garis[index] = 'X',
+                   this.tugas[index].status = 'belum selesai'
+               }
+           },
+           edit(index, val){
+               if(val == true){
+                   this.tugas[index].dis = false
+               }else{
+                   this.tugas[index].dis = true
+               }
+           },
+           hapus(index){
+               Vue.delete(this.tugas, index)
+           },
+           hapusselesai(){
+                for(i=this.tugas.length - 1; i >=0; i--){
+                    if(this.tugas[i].status === 'selesai'){
+                        Vue.delete(this.tugas, i)
+                    }
+                }
+           },
+           hapussemua(){
+                this.tugas = []
+           }
+       },
+   }),
+   new Vue({
+       el : '#app',
+    
+   })
+</script>
